@@ -15,3 +15,8 @@
 - All tests will go red
 - Make it pass by adding the minimal responsibles
 - Add tests on missing elements (user for instance) and go on the refactoring with that architecture.
+- (Add a PSR-4 autoload with composer to be able to load classes without requires. Change namespaces of classes accordingly)
+
+## Progression
+
+- I won't atomize at first, there is much to fake, and the process to create a test is then a bit long for now. I just added one test to have it working.
