@@ -20,3 +20,5 @@
 ## Progression
 
 - I won't atomize at first, there is much to fake, and the process to create a test is then a bit long for now. I just added one test to have it working.
+- When I wanted to add an interface, I had to require it. I then begun with the PSR-4 change with an autoload by composer. I had to cheat and modify 2 methods getById in repository to allow Faker to work in the namespace. I did it because I think it is not the king of alteration which is to be prevented in it.
+- 
