@@ -4,16 +4,43 @@ namespace App\Entity\Quote;
 
 class Quote implements QuoteInterface
 {
-    public $id;
-    public $siteId;
-    public $destinationId;
-    public $dateQuoted;
+    /**
+     * @var int
+     */
+    protected $id;
 
-    public function __construct($id, $siteId, $destinationId, $dateQuoted) {
+    /**
+     * @var int
+     */
+    protected $siteId;
+
+    /**
+     * @var int
+     */
+    protected $destinationId;
+
+    /**
+     * @var \DateTime
+     */
+    protected  $dateQuoted;
+
+    public function __construct(int $id, int $siteId, int $destinationId, \DateTime $dateQuoted) {
         $this->id = $id;
         $this->siteId = $siteId;
         $this->destinationId = $destinationId;
         $this->dateQuoted = $dateQuoted;
+    }
+
+    public function getId(): int {
+        return $this->id;
+    }
+
+    public function getDestinationId(): int {
+        return $this->destinationId;
+    }
+
+    public function getSiteId(): int {
+        return $this->siteId;
     }
 
     public function renderHtml(): string {

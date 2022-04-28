@@ -53,7 +53,7 @@ class TemplateManagerTest extends TestCase
         $expectedDestination = (new FakedDestinationRepository())->getById($destinationId);
         $expectedUser        = $this->fakedContext->getCurrentUser();
 
-        $quote = new Quote($this->faker->randomNumber(), $this->faker->randomNumber(), $destinationId, $this->faker->date());
+        $quote = new Quote($this->faker->randomNumber(), $this->faker->randomNumber(), $destinationId, DateTime::createFromFormat('Y-m-d', $this->faker->date()));
 
         $template = new Template(
             1,
@@ -94,13 +94,13 @@ L'équipe Calmedica.com
         $template = $this->getTestTemplateWithGivenMessage('[quote:destination_name]');
         $computed = $templateManager->getTemplateComputed($template, $data);
 
-        $expectedDestination = (new FakedDestinationRepository())->getById($data['quote']->destinationId);
+        $expectedDestination = (new FakedDestinationRepository())->getById($data['quote']->getDestinationId());
 
         $this->assertEquals($computed->content, $expectedDestination->countryName, $computed->content);
     }
 
     private function getFakedQuote(): Quote {
-        return new Quote($this->faker->randomNumber(), $this->faker->randomNumber(), $this->faker->randomNumber(), $this->faker->date());
+        return new Quote($this->faker->randomNumber(), $this->faker->randomNumber(), $this->faker->randomNumber(), DateTime::createFromFormat('Y-m-d', $this->faker->date()));
     }
 
     private function getTestTemplateWithGivenMessage(string $message): Template {

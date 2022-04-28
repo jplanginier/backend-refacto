@@ -44,12 +44,12 @@ class TemplateManager implements GetTemplateComputedInterface
 
         if ($quote)
         {
-            $_quoteFromRepository = FakedQuoteRepository::getInstance()->getById($quote->id);
-            $usefulObject = SiteRepository::getInstance()->getById($quote->siteId);
-            $destinationOfQuote = $this->destinationRepository->getById($quote->destinationId);
+            $_quoteFromRepository = FakedQuoteRepository::getInstance()->getById($quote->getId());
+            $usefulObject = SiteRepository::getInstance()->getById($quote->getSiteId());
+            $destinationOfQuote = $this->destinationRepository->getById($quote->getDestinationId());
 
             if(strpos($text, '[quote:destination_link]') !== false){
-                $destination = $this->destinationRepository->getById($quote->destinationId);
+                $destination = $this->destinationRepository->getById($quote->getDestinationId());
             }
 
             $containsSummaryHtml = strpos($text, '[quote:summary_html]');
@@ -76,7 +76,7 @@ class TemplateManager implements GetTemplateComputedInterface
         }
 
         if (isset($destination))
-            $text = str_replace('[quote:destination_link]', $usefulObject->url . '/' . $destination->countryName . '/quote/' . $_quoteFromRepository->id, $text);
+            $text = str_replace('[quote:destination_link]', $usefulObject->url . '/' . $destination->countryName . '/quote/' . $_quoteFromRepository->getId(), $text);
         else
             $text = str_replace('[quote:destination_link]', '', $text);
 
