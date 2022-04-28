@@ -22,3 +22,10 @@
 - I won't atomize at first, there is much to fake, and the process to create a test is then a bit long for now. I just added one test to have it working.
 - When I wanted to add an interface, I had to require it. I then begun with the PSR-4 change with an autoload by composer. I had to cheat and modify 2 methods getById in repository to allow Faker to work in the namespace. I did it because I think it is not the king of alteration which is to be prevented in it.
 - Moved DestinationRepository from hexagon with an interface. Created another implementation of the repository, but as I'm not used to create mocks with faker, I'm unsure of the use of my second one. I began the same with quotes, but I will complete it only if needed, as it takes too much time.
+
+### In the end
+- Most of the code in the Manager is cleared.
+- Most of entities and repositories are still using bad practices, but there is one example for each of them to be cleaned
+- I didn't add more tests, as I'm running out of time. On a real build, I would do more unit tests than rely on the only existing one (testing multiple fixed values instead of random values send by faker also)
+- There is no doc for the next dev also, because of time. I would comment in the PHPDoc of the replacePlaceholders method how it does work, at the very least
+- Time used : a bit more than 2 hours
