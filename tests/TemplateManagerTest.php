@@ -2,9 +2,12 @@
 
 use App\Context\ApplicationContext;
 use App\Context\ApplicationContextInterface;
+use App\Entity\Destination;
 use App\Entity\Quote;
 use App\Entity\Template;
-use App\Repository\DestinationRepository;
+use App\Repository\Destination\DestinationRepositoryInterface;
+use App\Repository\Destination\FakedDestinationRepository;
+use App\Repository\Destination\StaticDestinationRepository;
 use App\TemplateManager;
 use PHPUnit\Framework\TestCase;
 
@@ -31,7 +34,7 @@ class TemplateManagerTest extends TestCase
     {
         $this->faker = \Faker\Factory::create();
         $this->fakedQuote = $this->getFakedQuote();
-        $this->fakedContext = $this->getFakedContext();
+        $this->fakedContext = $this->getFakedContext(new FakedDestinationRepository());
     }
 
     /**
@@ -49,7 +52,7 @@ class TemplateManagerTest extends TestCase
         $this->faker = \Faker\Factory::create();
 
         $destinationId                  = $this->faker->randomNumber();
-        $expectedDestination = DestinationRepository::getInstance()->getById($destinationId);
+        $expectedDestination = (new FakedDestinationRepository())->getById($destinationId);
         $expectedUser        = $this->fakedContext->getCurrentUser();
 
         $quote = new Quote($this->faker->randomNumber(), $this->faker->randomNumber(), $destinationId, $this->faker->date());
@@ -93,7 +96,7 @@ L'équipe Calmedica.com
         $template = $this->getTestTemplateWithGivenMessage('[quote:destination_name]');
         $computed = $templateManager->getTemplateComputed($template, $data);
 
-        $expectedDestination = DestinationRepository::getInstance()->getById($data['quote']->destinationId);
+        $expectedDestination = (new FakedDestinationRepository())->getById($data['quote']->destinationId);
 
         $this->assertEquals($computed->content, $expectedDestination->countryName, $computed->content);
     }
@@ -106,7 +109,7 @@ L'équipe Calmedica.com
         return new Template(1, 'Fixed subject', $message);
     }
 
-    private function getFakedContext(): ApplicationContextInterface {
-        return new ApplicationContext();
+    private function getFakedContext(DestinationRepositoryInterface $destinationRepository): ApplicationContextInterface {
+        return new ApplicationContext($destinationRepository);
     }
 }

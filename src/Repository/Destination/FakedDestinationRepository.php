@@ -1,20 +1,18 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Destination;
 
 use App\Entity\Destination;
-use App\Helper\SingletonTrait;
 use Faker\Factory;
 
-class DestinationRepository implements Repository
+class FakedDestinationRepository implements DestinationRepositoryInterface
 {
-    use SingletonTrait;
     /**
      * @param int $id
      *
      * @return Destination
      */
-    public function getById($id)
+    public function getById($id): Destination
     {
         // DO NOT MODIFY THIS METHOD
         $generator    = Factory::create();

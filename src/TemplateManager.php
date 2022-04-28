@@ -6,8 +6,8 @@ use App\Context\ApplicationContext;
 use App\Entity\Quote;
 use App\Entity\Template;
 use App\Entity\User;
-use App\Repository\DestinationRepository;
-use App\Repository\QuoteRepository;
+use App\Repository\Destination\FakedDestinationRepository;
+use App\Repository\Quote\FakedQuoteRepository;
 use App\Repository\SiteRepository;
 
 class TemplateManager implements GetTemplateComputedInterface
@@ -16,9 +16,14 @@ class TemplateManager implements GetTemplateComputedInterface
      * @var ApplicationContext
      */
     private $appContext;
+    /**
+     * @var Repository\Destination\DestinationRepositoryInterface
+     */
+    private $destinationRepository;
 
     public function __construct(ApplicationContext $context) {
         $this->appContext = $context;
+        $this->destinationRepository = $context->getDestinationRepository();
     }
 
     public function getTemplateComputed(Template $tpl, array $data)
@@ -40,12 +45,12 @@ class TemplateManager implements GetTemplateComputedInterface
 
         if ($quote)
         {
-            $_quoteFromRepository = QuoteRepository::getInstance()->getById($quote->id);
+            $_quoteFromRepository = FakedQuoteRepository::getInstance()->getById($quote->id);
             $usefulObject = SiteRepository::getInstance()->getById($quote->siteId);
-            $destinationOfQuote = DestinationRepository::getInstance()->getById($quote->destinationId);
+            $destinationOfQuote = $this->destinationRepository->getById($quote->destinationId);
 
             if(strpos($text, '[quote:destination_link]') !== false){
-                $destination = DestinationRepository::getInstance()->getById($quote->destinationId);
+                $destination = $this->destinationRepository->getById($quote->destinationId);
             }
 
             $containsSummaryHtml = strpos($text, '[quote:summary_html]');
