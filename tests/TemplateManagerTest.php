@@ -1,6 +1,7 @@
 <?php
 
 use App\Context\ApplicationContext;
+use App\Context\ApplicationContextInterface;
 use App\Entity\Quote;
 use App\Entity\Template;
 use App\Repository\DestinationRepository;
@@ -18,6 +19,10 @@ class TemplateManagerTest extends TestCase
      * @var Quote
      */
     private $fakedQuote;
+    /**
+     * @var ApplicationContextInterface
+     */
+    protected $fakedContext;
 
     /**
      * Init the mocks
@@ -26,6 +31,7 @@ class TemplateManagerTest extends TestCase
     {
         $this->faker = \Faker\Factory::create();
         $this->fakedQuote = $this->getFakedQuote();
+        $this->fakedContext = $this->getFakedContext();
     }
 
     /**
@@ -44,7 +50,7 @@ class TemplateManagerTest extends TestCase
 
         $destinationId                  = $this->faker->randomNumber();
         $expectedDestination = DestinationRepository::getInstance()->getById($destinationId);
-        $expectedUser        = ApplicationContext::getInstance()->getCurrentUser();
+        $expectedUser        = $this->fakedContext->getCurrentUser();
 
         $quote = new Quote($this->faker->randomNumber(), $this->faker->randomNumber(), $destinationId, $this->faker->date());
 
@@ -60,7 +66,7 @@ Bien cordialement,
 
 L'équipe Calmedica.com
 ");
-        $templateManager = new TemplateManager();
+        $templateManager = new TemplateManager($this->fakedContext);
 
         $message = $templateManager->getTemplateComputed(
             $template,
@@ -83,7 +89,7 @@ L'équipe Calmedica.com
 
     public function testQuoteDestinationNameIsReplacedInMessage(): void {
         $data = ['quote' => $this->getFakedQuote()];
-        $templateManager = new TemplateManager();
+        $templateManager = new TemplateManager($this->fakedContext);
         $template = $this->getTestTemplateWithGivenMessage('[quote:destination_name]');
         $computed = $templateManager->getTemplateComputed($template, $data);
 
@@ -96,7 +102,11 @@ L'équipe Calmedica.com
         return new Quote($this->faker->randomNumber(), $this->faker->randomNumber(), $this->faker->randomNumber(), $this->faker->date());
     }
 
-    private function getTestTemplateWithGivenMessage(string $message) {
+    private function getTestTemplateWithGivenMessage(string $message): Template {
         return new Template(1, 'Fixed subject', $message);
+    }
+
+    private function getFakedContext(): ApplicationContextInterface {
+        return new ApplicationContext();
     }
 }

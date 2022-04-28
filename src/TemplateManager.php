@@ -12,6 +12,15 @@ use App\Repository\SiteRepository;
 
 class TemplateManager implements GetTemplateComputedInterface
 {
+    /**
+     * @var ApplicationContext
+     */
+    private $appContext;
+
+    public function __construct(ApplicationContext $context) {
+        $this->appContext = $context;
+    }
+
     public function getTemplateComputed(Template $tpl, array $data)
     {
         if (!$tpl) {
@@ -27,8 +36,6 @@ class TemplateManager implements GetTemplateComputedInterface
 
     private function computeText($text, array $data)
     {
-        $APPLICATION_CONTEXT = ApplicationContext::getInstance();
-
         $quote = (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : null;
 
         if ($quote)
@@ -73,7 +80,7 @@ class TemplateManager implements GetTemplateComputedInterface
          * USER
          * [user:*]
          */
-        $_user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $APPLICATION_CONTEXT->getCurrentUser();
+        $_user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $this->appContext->getCurrentUser();
         if($_user) {
             (strpos($text, '[user:first_name]') !== false) and $text = str_replace('[user:first_name]'       , ucfirst(mb_strtolower($_user->firstname)), $text);
         }
