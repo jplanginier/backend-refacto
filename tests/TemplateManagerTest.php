@@ -2,12 +2,10 @@
 
 use App\Context\ApplicationContext;
 use App\Context\ApplicationContextInterface;
-use App\Entity\Destination;
-use App\Entity\Quote;
+use App\Entity\Quote\Quote;
 use App\Entity\Template;
 use App\Repository\Destination\DestinationRepositoryInterface;
 use App\Repository\Destination\FakedDestinationRepository;
-use App\Repository\Destination\StaticDestinationRepository;
 use App\TemplateManager;
 use PHPUnit\Framework\TestCase;
 

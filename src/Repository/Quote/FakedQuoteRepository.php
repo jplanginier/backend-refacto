@@ -2,7 +2,7 @@
 
 namespace App\Repository\Quote;
 
-use App\Entity\Quote;
+use App\Entity\Quote\Quote;
 use App\Helper\SingletonTrait;
 use DateTime;
 use Faker\Factory;

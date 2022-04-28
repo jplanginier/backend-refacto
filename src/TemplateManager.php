@@ -3,10 +3,9 @@
 namespace App;
 
 use App\Context\ApplicationContext;
-use App\Entity\Quote;
+use App\Entity\Quote\Quote;
 use App\Entity\Template;
 use App\Entity\User;
-use App\Repository\Destination\FakedDestinationRepository;
 use App\Repository\Quote\FakedQuoteRepository;
 use App\Repository\SiteRepository;
 
@@ -60,14 +59,14 @@ class TemplateManager implements GetTemplateComputedInterface
                 if ($containsSummaryHtml !== false) {
                     $text = str_replace(
                         '[quote:summary_html]',
-                        Quote::renderHtml($_quoteFromRepository),
+                        $_quoteFromRepository->renderHtml(),
                         $text
                     );
                 }
                 if ($containsSummary !== false) {
                     $text = str_replace(
                         '[quote:summary]',
-                        Quote::renderText($_quoteFromRepository),
+                        $_quoteFromRepository->renderText(),
                         $text
                     );
                 }
