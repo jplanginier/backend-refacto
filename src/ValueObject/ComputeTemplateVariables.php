@@ -6,10 +6,21 @@ use App\Context\ApplicationContextInterface;
 use App\Entity\Destination;
 use App\Entity\Quote\Quote;
 use App\Entity\Quote\QuoteInterface;
+use App\Entity\Site;
 use App\Entity\User;
+use App\Repository\SiteRepository;
 
 class ComputeTemplateVariables implements ComputeTemplateVariablesInterface
 {
+    /**
+     * @var array
+     */
+    private $data;
+    /**
+     * @var ApplicationContextInterface
+     */
+    private $context;
+
     public function __construct(array $data, ApplicationContextInterface $applicationContext) {
         $this->data = $data;
         $this->context = $applicationContext;
@@ -31,5 +42,14 @@ class ComputeTemplateVariables implements ComputeTemplateVariablesInterface
 
     public function getUser(): User {
         return (isset($this->data['user']) and ($this->data['user'] instanceof User)) ? $this->data['user'] : $this->context->getCurrentUser();
+    }
+
+    public function getSite(): ?Site {
+        $quote = $this->getQuote();
+        if (!$quote) {
+            return null;
+        }
+
+        return SiteRepository::getInstance()->getById($quote->getSiteId());
     }
 }

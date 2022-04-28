@@ -4,6 +4,7 @@ namespace App;
 
 use App\Context\ApplicationContext;
 use App\Entity\Template;
+use App\ReplacementProcessing\ReplacementProcessor;
 use App\Repository\Quote\FakedQuoteRepository;
 use App\Repository\SiteRepository;
 use App\ValueObject\ComputeTemplateVariables;
@@ -42,6 +43,9 @@ class TemplateManager implements GetTemplateComputedInterface
 
     private function computeText($text, ComputeTemplateVariablesInterface $variables)
     {
+        $replacementProcess = new ReplacementProcessor();
+        $text = $replacementProcess->replacePlaceholders($text, $variables);
+
         $quote = $variables->getQuote();
         if ($quote)
         {
@@ -76,10 +80,7 @@ class TemplateManager implements GetTemplateComputedInterface
             (strpos($text, '[quote:destination_name]') !== false) and $text = str_replace('[quote:destination_name]',$destinationOfQuote->countryName,$text);
         }
 
-        if (isset($destination))
-            $text = str_replace('[quote:destination_link]', $usefulObject->url . '/' . $destination->countryName . '/quote/' . $_quoteFromRepository->getId(), $text);
-        else
-            $text = str_replace('[quote:destination_link]', '', $text);
+
 
         /*
          * USER
