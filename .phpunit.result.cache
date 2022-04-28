@@ -1,1 +1,1 @@
-{"version":1,"defects":{"TemplateManagerTest::test":4,"TemplateManagerTest::testQuoteDestinationNameIsReplacedInMessage":4},"times":{"TemplateManagerTest::test":0.007,"TemplateManagerTest::testQuoteDestinationNameIsReplacedInMessage":0.001}}
+{"version":1,"defects":{"TemplateManagerTest::test":3,"TemplateManagerTest::testQuoteDestinationNameIsReplacedInMessage":3},"times":{"TemplateManagerTest::test":0.007,"TemplateManagerTest::testQuoteDestinationNameIsReplacedInMessage":0}}
