@@ -1,27 +1,38 @@
 <?php
 
+use App\Context\ApplicationContext;
+use App\Context\ApplicationContextInterface;
+use App\Entity\Quote\Quote;
+use App\Entity\Template;
+use App\Repository\Destination\DestinationRepositoryInterface;
+use App\Repository\Destination\FakedDestinationRepository;
+use App\TemplateManager;
 use PHPUnit\Framework\TestCase;
-
-require_once __DIR__ . '/../src/Entity/Destination.php';
-require_once __DIR__ . '/../src/Entity/Quote.php';
-require_once __DIR__ . '/../src/Entity/Site.php';
-require_once __DIR__ . '/../src/Entity/Template.php';
-require_once __DIR__ . '/../src/Entity/User.php';
-require_once __DIR__ . '/../src/Helper/SingletonTrait.php';
-require_once __DIR__ . '/../src/Context/ApplicationContext.php';
-require_once __DIR__ . '/../src/Repository/Repository.php';
-require_once __DIR__ . '/../src/Repository/DestinationRepository.php';
-require_once __DIR__ . '/../src/Repository/QuoteRepository.php';
-require_once __DIR__ . '/../src/Repository/SiteRepository.php';
-require_once __DIR__ . '/../src/TemplateManager.php';
 
 class TemplateManagerTest extends TestCase
 {
+    /**
+     * @var \Faker\Generator
+     */
+    private $faker;
+
+    /**
+     * @var Quote
+     */
+    private $fakedQuote;
+    /**
+     * @var ApplicationContextInterface
+     */
+    protected $fakedContext;
+
     /**
      * Init the mocks
      */
     public function setUp(): void
     {
+        $this->faker = \Faker\Factory::create();
+        $this->fakedQuote = $this->getFakedQuote();
+        $this->fakedContext = $this->getFakedContext(new FakedDestinationRepository());
     }
 
     /**
@@ -36,13 +47,13 @@ class TemplateManagerTest extends TestCase
      */
     public function test()
     {
-        $faker = \Faker\Factory::create();
+        $this->faker = \Faker\Factory::create();
 
-        $destinationId                  = $faker->randomNumber();
-        $expectedDestination = DestinationRepository::getInstance()->getById($destinationId);
-        $expectedUser        = ApplicationContext::getInstance()->getCurrentUser();
+        $destinationId                  = $this->faker->randomNumber();
+        $expectedDestination = (new FakedDestinationRepository())->getById($destinationId);
+        $expectedUser        = $this->fakedContext->getCurrentUser();
 
-        $quote = new Quote($faker->randomNumber(), $faker->randomNumber(), $destinationId, $faker->date());
+        $quote = new Quote($this->faker->randomNumber(), $this->faker->randomNumber(), $destinationId, DateTime::createFromFormat('Y-m-d', $this->faker->date()));
 
         $template = new Template(
             1,
@@ -56,7 +67,7 @@ Bien cordialement,
 
 L'équipe Calmedica.com
 ");
-        $templateManager = new TemplateManager();
+        $templateManager = new TemplateManager($this->fakedContext);
 
         $message = $templateManager->getTemplateComputed(
             $template,
@@ -75,5 +86,28 @@ Bien cordialement,
 
 L'équipe Calmedica.com
 ", $message->content);
+    }
+
+    public function testQuoteDestinationNameIsReplacedInMessage(): void {
+        $data = ['quote' => $this->getFakedQuote()];
+        $templateManager = new TemplateManager($this->fakedContext);
+        $template = $this->getTestTemplateWithGivenMessage('[quote:destination_name]');
+        $computed = $templateManager->getTemplateComputed($template, $data);
+
+        $expectedDestination = (new FakedDestinationRepository())->getById($data['quote']->getDestinationId());
+
+        $this->assertEquals($computed->content, $expectedDestination->countryName, $computed->content);
+    }
+
+    private function getFakedQuote(): Quote {
+        return new Quote($this->faker->randomNumber(), $this->faker->randomNumber(), $this->faker->randomNumber(), DateTime::createFromFormat('Y-m-d', $this->faker->date()));
+    }
+
+    private function getTestTemplateWithGivenMessage(string $message): Template {
+        return new Template(1, 'Fixed subject', $message);
+    }
+
+    private function getFakedContext(DestinationRepositoryInterface $destinationRepository): ApplicationContextInterface {
+        return new ApplicationContext($destinationRepository);
     }
 }
