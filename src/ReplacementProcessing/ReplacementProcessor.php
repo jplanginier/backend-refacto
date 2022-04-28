@@ -3,6 +3,9 @@
 namespace App\ReplacementProcessing;
 
 use App\ReplacementProcessing\ReplaceHandlers\QuoteDestinationLinkReplaceHandler;
+use App\ReplacementProcessing\ReplaceHandlers\QuoteDestinationNameReplaceHandler;
+use App\ReplacementProcessing\ReplaceHandlers\QuoteSummaryHtmlReplaceHandler;
+use App\ReplacementProcessing\ReplaceHandlers\QuoteSummaryReplaceHandler;
 use App\ReplacementProcessing\ReplaceHandlers\ReplaceHandlerInterface;
 use App\ValueObject\ComputeTemplateVariablesInterface;
 
@@ -22,6 +25,9 @@ class ReplacementProcessor
     private function getHandlers(): array {
         return [
             new QuoteDestinationLinkReplaceHandler(),
+            new QuoteSummaryHtmlReplaceHandler(),
+            new QuoteSummaryReplaceHandler(),
+            new QuoteDestinationNameReplaceHandler(),
         ];
     }
 }
