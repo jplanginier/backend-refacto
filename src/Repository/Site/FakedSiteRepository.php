@@ -1,24 +1,19 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Site;
 
-use App\Entity\Site;
-use App\Helper\SingletonTrait;
+use App\Entity\Site\Site;
+use App\Entity\Site\SiteInterface;
 use Faker\Factory;
 
-class SiteRepository implements Repository
+class FakedSiteRepository implements SiteRepositoryInterface
 {
-    use SingletonTrait;
-
-    private $url;
-
     /**
      * @param int $id
      *
      * @return Site
      */
-    public function getById($id)
-    {
+    public function getById($id): SiteInterface {
         // DO NOT MODIFY THIS METHOD
         $generator = Factory::create();
         $generator->seed($id);

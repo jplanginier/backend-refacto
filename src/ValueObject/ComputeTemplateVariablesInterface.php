@@ -2,18 +2,18 @@
 
 namespace App\ValueObject;
 
-use App\Entity\Destination;
+use App\Entity\Destination\DestinationInterface;
 use App\Entity\Quote\QuoteInterface;
-use App\Entity\Site;
-use App\Entity\User;
+use App\Entity\Site\SiteInterface;
+use App\Entity\User\UserInterface;
 
 interface ComputeTemplateVariablesInterface
 {
     public function getQuote(): ?QuoteInterface;
 
-    public function getDestination(): ?Destination;
+    public function getDestination(): ?DestinationInterface;
 
-    public function getUser(): User;
+    public function getUser(): UserInterface;
 
-    public function getSite(): ?Site;
+    public function getSite(): ?SiteInterface;
 }

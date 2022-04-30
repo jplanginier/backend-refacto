@@ -10,7 +10,7 @@ class QuoteDestinationLinkReplaceHandler implements ReplaceHandlerInterface
         $destination = $variables->getDestination();
 
         if ($destination) {
-            return  str_replace('[quote:destination_link]', $variables->getSite()->url . '/' . $destination->countryName . '/quote/' . $variables->getQuote()->getId(), $text);
+            return  str_replace('[quote:destination_link]', $variables->getSite()->getUrl() . '/' . $destination->countryName . '/quote/' . $variables->getQuote()->getId(), $text);
         }
 
         return str_replace('[quote:destination_link]', '', $text);

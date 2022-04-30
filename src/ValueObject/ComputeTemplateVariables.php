@@ -3,12 +3,15 @@
 namespace App\ValueObject;
 
 use App\Context\ApplicationContextInterface;
-use App\Entity\Destination;
+use App\Entity\Destination\Destination;
+use App\Entity\Destination\DestinationInterface;
 use App\Entity\Quote\Quote;
 use App\Entity\Quote\QuoteInterface;
-use App\Entity\Site;
-use App\Entity\User;
-use App\Repository\SiteRepository;
+use App\Entity\Site\Site;
+use App\Entity\Site\SiteInterface;
+use App\Entity\User\User;
+use App\Entity\User\UserInterface;
+use App\Repository\Site\FakedSiteRepository;
 
 class ComputeTemplateVariables implements ComputeTemplateVariablesInterface
 {
@@ -30,7 +33,7 @@ class ComputeTemplateVariables implements ComputeTemplateVariablesInterface
         return (isset($this->data['quote']) and $this->data['quote'] instanceof Quote) ? $this->data['quote'] : null;
     }
 
-    public function getDestination(): ?Destination {
+    public function getDestination(): ?DestinationInterface {
         $quote = $this->getQuote();
         if (!$quote) {
             return null;
@@ -40,16 +43,16 @@ class ComputeTemplateVariables implements ComputeTemplateVariablesInterface
         return $destinationRepository->getById($this->getQuote()->getDestinationId());
     }
 
-    public function getUser(): User {
+    public function getUser(): UserInterface {
         return (isset($this->data['user']) and ($this->data['user'] instanceof User)) ? $this->data['user'] : $this->context->getCurrentUser();
     }
 
-    public function getSite(): ?Site {
+    public function getSite(): ?SiteInterface {
         $quote = $this->getQuote();
         if (!$quote) {
             return null;
         }
 
-        return SiteRepository::getInstance()->getById($quote->getSiteId());
+        return $this->context->getSiteRepository()->getById($quote->getSiteId());
     }
 }

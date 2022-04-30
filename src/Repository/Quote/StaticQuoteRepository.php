@@ -3,19 +3,20 @@
 namespace App\Repository\Quote;
 
 use App\Entity\Quote\Quote;
+use App\Entity\Quote\QuoteInterface;
 
 class StaticQuoteRepository implements QuoteRepositoryInterface
 {
     /**
-     * @var Quote
+     * @var QuoteInterface
      */
     private $quote;
 
-    public function __construct(Quote $staticQuote) {
+    public function __construct(QuoteInterface $staticQuote) {
         $this->quote = $staticQuote;
     }
 
-    public function getById($id): Quote {
+    public function getById($id): QuoteInterface {
         return $this->quote;
     }
 }

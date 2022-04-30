@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Entity\Template;
+use App\Entity\Template\Template;
 
 interface GetTemplateComputedInterface
 {

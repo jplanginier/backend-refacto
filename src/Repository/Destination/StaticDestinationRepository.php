@@ -2,20 +2,20 @@
 
 namespace App\Repository\Destination;
 
-use App\Entity\Destination;
+use App\Entity\Destination\DestinationInterface;
 
 class StaticDestinationRepository implements DestinationRepositoryInterface
 {
     /**
-     * @var Destination
+     * @var DestinationInterface
      */
     private $destination;
 
-    public function __construct(Destination $staticDestination) {
+    public function __construct(DestinationInterface $staticDestination) {
         $this->destination = $staticDestination;
     }
 
-    public function getById($id): Destination {
+    public function getById($id): DestinationInterface {
         return $this->destination;
     }
 }

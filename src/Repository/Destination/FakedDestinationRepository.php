@@ -2,7 +2,8 @@
 
 namespace App\Repository\Destination;
 
-use App\Entity\Destination;
+use App\Entity\Destination\Destination;
+use App\Entity\Destination\DestinationInterface;
 use Faker\Factory;
 
 class FakedDestinationRepository implements DestinationRepositoryInterface
@@ -12,10 +13,9 @@ class FakedDestinationRepository implements DestinationRepositoryInterface
      *
      * @return Destination
      */
-    public function getById($id): Destination
-    {
+    public function getById($id): DestinationInterface {
         // DO NOT MODIFY THIS METHOD
-        $generator    = Factory::create();
+        $generator = Factory::create();
         $generator->seed($id);
 
         return new Destination(
