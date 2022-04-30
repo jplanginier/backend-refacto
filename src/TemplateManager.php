@@ -34,9 +34,6 @@ class TemplateManager implements GetTemplateComputedInterface
     private function computeText($text, ComputeTemplateVariablesInterface $variables)
     {
         $replacementProcess = new ReplacementProcessor();
-        $text = $replacementProcess->replacePlaceholders($text, $variables);
-
-
-        return $text;
+        return $replacementProcess->replacePlaceholders($text, $variables);
     }
 }

@@ -10,6 +10,7 @@ use App\Entity\Site\SiteInterface;
 use App\Entity\Template\Template;
 use App\Entity\Site\Site;
 use App\Entity\User\User;
+use App\ReplacementProcessing\ReplaceHandlers\QuoteDestinationNameReplaceHandler;
 use App\Repository\Destination\StaticDestinationRepository;
 use App\Repository\Quote\StaticQuoteRepository;
 use App\Entity\Destination\Destination;
@@ -39,7 +40,7 @@ class TemplateManagerTest extends TestCase
 
     public function testQuoteDestinationNameIsReplacedInMessage(): void {
         $templateManager = new TemplateManager($this->baseTestContext);
-        $template = $this->getTestTemplateWithGivenMessage('[quote:destination_name]');
+        $template = $this->getTestTemplateWithGivenMessage(QuoteDestinationNameReplaceHandler::getReplacedPattern());
         $computed = $templateManager->getTemplateComputed($template, ['quote' => $this->baseTestContext->getQuoteRepository()->getById(3)]);
         $expectedCountryName = ($this->baseTestContext->getDestinationRepository()->getById(2))->getCountryName();
 
@@ -48,7 +49,7 @@ class TemplateManagerTest extends TestCase
 
     public function testSubjectAlsoHasReplacementsApplied(): void {
         $templateManager = new TemplateManager($this->baseTestContext);
-        $template = new App\Entity\Template\Template(1, '[quote:destination_name]', 'some content');
+        $template = new App\Entity\Template\Template(1, QuoteDestinationNameReplaceHandler::getReplacedPattern(), 'some content');
         $computed = $templateManager->getTemplateComputed($template, ['quote' => $this->baseTestContext->getQuoteRepository()->getById(3)]);
         $expectedCountryName = ($this->baseTestContext->getDestinationRepository()->getById(2))->getCountryName();
 
@@ -56,7 +57,7 @@ class TemplateManagerTest extends TestCase
     }
 
     public function testOriginalObjectIsNotAlteredDuringReplacement(): void {
-        $initialTitle = '[quote:destination_name]';
+        $initialTitle = QuoteDestinationNameReplaceHandler::getReplacedPattern();
         $templateManager = new TemplateManager($this->baseTestContext);
         $initialTemplate = new Template(1, $initialTitle, 'some content');
         $computed = $templateManager->getTemplateComputed($initialTemplate, []);

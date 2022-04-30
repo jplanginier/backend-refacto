@@ -3,15 +3,10 @@
 namespace App\ValueObject;
 
 use App\Context\ApplicationContextInterface;
-use App\Entity\Destination\Destination;
 use App\Entity\Destination\DestinationInterface;
-use App\Entity\Quote\Quote;
 use App\Entity\Quote\QuoteInterface;
-use App\Entity\Site\Site;
 use App\Entity\Site\SiteInterface;
-use App\Entity\User\User;
 use App\Entity\User\UserInterface;
-use App\Repository\Site\FakedSiteRepository;
 
 class ComputeTemplateVariables implements ComputeTemplateVariablesInterface
 {
@@ -30,7 +25,7 @@ class ComputeTemplateVariables implements ComputeTemplateVariablesInterface
     }
 
     public function getQuote(): ?QuoteInterface {
-        return (isset($this->data['quote']) and $this->data['quote'] instanceof QuoteInterface) ? $this->data['quote'] : null;
+        return $this->isQuoteParamPesent() && $this->isQuoteParamAValidQuote() ? $this->data['quote'] : null;
     }
 
     public function getDestination(): ?DestinationInterface {
@@ -54,5 +49,13 @@ class ComputeTemplateVariables implements ComputeTemplateVariablesInterface
         }
 
         return $this->context->getSiteRepository()->getById($quote->getSiteId());
+    }
+
+    private function isQuoteParamPesent(): bool {
+        return isset($this->data['quote']);
+    }
+
+    private function isQuoteParamAValidQuote(): bool {
+        return $this->data['quote'] instanceof QuoteInterface;
     }
 }
