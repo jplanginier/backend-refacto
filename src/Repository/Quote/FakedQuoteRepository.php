@@ -1,18 +1,22 @@
 <?php
 
-class QuoteRepository implements Repository
-{
-    use SingletonTrait;
+namespace App\Repository\Quote;
 
+use App\Entity\Quote\Quote;
+use App\Entity\Quote\QuoteInterface;
+use DateTime;
+use Faker\Factory;
+
+class FakedQuoteRepository implements QuoteRepositoryInterface
+{
     /**
      * @param int $id
      *
      * @return Quote
      */
-    public function getById($id)
-    {
+    public function getById($id): QuoteInterface {
         // DO NOT MODIFY THIS METHOD
-        $generator = Faker\Factory::create();
+        $generator = Factory::create();
         $generator->seed($id);
 
         return new Quote(

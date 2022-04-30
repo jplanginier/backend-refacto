@@ -1,0 +1,31 @@
+# Refactoring process
+
+## Plan
+
+- check if the only existing test works
+- if it does, split it into multiple atomic tests, kill the code to check if the tests do fail, then see if it pass when the code is enabled
+- create an interface for getTemplateComputed method. Given it is the entry to what could be an hexagon, createing an interface will "officialize" its status as primary adapter of the hexagon
+- Make context test friendly by removing its Singleton pattern, creating an interface for the class, which will allow to create stubs
+- Inject context to TemplateManager construct()
+- Create a separate interface for every repository, allowing to type the getById() method for each one.
+- At the same time, create an interface for every entity which could come from repositories, to be able to create the entities for a stub repository
+- With each entity interface, begin to add business methods to the interface. If the methods are static, remove this behavior for a more object oriented one (example : Quote::renderText)
+- Generate a DTO from the $data from getTemplateComputed to have typed parameters
+- Alter the process in computeText to use the DTO, and to consume a middleware oriented chain of responsabilities to compute modifications
+- All tests will go red
+- Make it pass by adding the minimal responsibles
+- Add tests on missing elements (user for instance) and go on the refactoring with that architecture.
+- (Add a PSR-4 autoload with composer to be able to load classes without requires. Change namespaces of classes accordingly)
+
+## Progression
+
+- I won't atomize at first, there is much to fake, and the process to create a test is then a bit long for now. I just added one test to have it working.
+- When I wanted to add an interface, I had to require it. I then begun with the PSR-4 change with an autoload by composer. I had to cheat and modify 2 methods getById in repository to allow Faker to work in the namespace. I did it because I think it is not the king of alteration which is to be prevented in it.
+- Moved DestinationRepository from hexagon with an interface. Created another implementation of the repository, but as I'm not used to create mocks with faker, I'm unsure of the use of my second one. I began the same with quotes, but I will complete it only if needed, as it takes too much time.
+
+### In the end
+- Most of the code in the Manager is cleared.
+- Most of entities and repositories are still using bad practices, but there is one example for each of them to be cleaned
+- I didn't add more tests, as I'm running out of time. On a real build, I would do more unit tests than rely on the only existing one (testing multiple fixed values instead of random values send by faker also)
+- There is no doc for the next dev also, because of time. I would comment in the PHPDoc of the replacePlaceholders method how it does work, at the very least
+- Time used : a bit more than 2 hours
