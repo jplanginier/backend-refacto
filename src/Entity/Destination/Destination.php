@@ -10,8 +10,7 @@ class Destination implements DestinationInterface
     public $name;
     public $computerName;
 
-    public function __construct(int $id, string $countryName, string $conjunction, string $computerName)
-    {
+    public function __construct(int $id, string $countryName, string $conjunction, string $computerName) {
         $this->id = $id;
         $this->countryName = $countryName;
         $this->conjunction = $conjunction;

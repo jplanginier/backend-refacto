@@ -32,11 +32,11 @@ class ApplicationContext implements ApplicationContextInterface
     private $quoteRepository;
 
     public function __construct(
-        SiteInterface $currentSite,
-        UserInterface $currentUser,
+        SiteInterface                  $currentSite,
+        UserInterface                  $currentUser,
         DestinationRepositoryInterface $destinationRepository,
-        SiteRepositoryInterface $siteRepository,
-        QuoteRepositoryInterface $quoteRepository
+        SiteRepositoryInterface        $siteRepository,
+        QuoteRepositoryInterface       $quoteRepository
     ) {
         $this->currentSite = $currentSite;
         $this->currentUser = $currentUser;

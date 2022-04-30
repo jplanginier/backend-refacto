@@ -2,6 +2,8 @@
 
 namespace App\Entity\Quote;
 
+use DateTime;
+
 class Quote implements QuoteInterface
 {
     /**
@@ -20,11 +22,11 @@ class Quote implements QuoteInterface
     protected $destinationId;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    protected  $dateQuoted;
+    protected $dateQuoted;
 
-    public function __construct(int $id, int $siteId, int $destinationId, \DateTime $dateQuoted) {
+    public function __construct(int $id, int $siteId, int $destinationId, DateTime $dateQuoted) {
         $this->id = $id;
         $this->siteId = $siteId;
         $this->destinationId = $destinationId;
@@ -48,6 +50,6 @@ class Quote implements QuoteInterface
     }
 
     public function renderText(): string {
-        return (string) $this->id;
+        return (string)$this->id;
     }
 }

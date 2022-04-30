@@ -2,7 +2,6 @@
 
 namespace App\Repository\Site;
 
-use App\Entity\Site\Site;
 use App\Entity\Site\SiteInterface;
 
 class StaticSiteRepository implements SiteRepositoryInterface

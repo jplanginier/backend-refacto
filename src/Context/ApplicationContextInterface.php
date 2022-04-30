@@ -2,9 +2,7 @@
 
 namespace App\Context;
 
-use App\Entity\Site\Site;
 use App\Entity\Site\SiteInterface;
-use App\Entity\User\User;
 use App\Entity\User\UserInterface;
 use App\Repository\Destination\DestinationRepositoryInterface;
 use App\Repository\Quote\QuoteRepositoryInterface;

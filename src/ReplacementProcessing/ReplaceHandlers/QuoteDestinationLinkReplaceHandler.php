@@ -2,8 +2,6 @@
 
 namespace App\ReplacementProcessing\ReplaceHandlers;
 
-use App\Entity\Destination\DestinationInterface;
-use App\Entity\Site\SiteInterface;
 use App\ValueObject\ComputeTemplateVariablesInterface;
 
 class QuoteDestinationLinkReplaceHandler implements ReplaceHandlerInterface, ReplaceSinglePatternInterface

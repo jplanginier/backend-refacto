@@ -20,8 +20,7 @@ class TemplateManager implements GetTemplateComputedInterface
         $this->appContext = $context;
     }
 
-    public function getTemplateComputed(Template $tpl, array $data)
-    {
+    public function getTemplateComputed(Template $tpl, array $data) {
         $variables = new ComputeTemplateVariables($data, $this->appContext);
 
         $replaced = clone($tpl);
@@ -31,8 +30,7 @@ class TemplateManager implements GetTemplateComputedInterface
         return $replaced;
     }
 
-    private function computeText($text, ComputeTemplateVariablesInterface $variables)
-    {
+    private function computeText($text, ComputeTemplateVariablesInterface $variables) {
         $replacementProcess = new ReplacementProcessor();
         return $replacementProcess->replacePlaceholders($text, $variables);
     }

@@ -2,7 +2,6 @@
 
 namespace App\Repository\Quote;
 
-use App\Entity\Quote\Quote;
 use App\Entity\Quote\QuoteInterface;
 
 class StaticQuoteRepository implements QuoteRepositoryInterface
