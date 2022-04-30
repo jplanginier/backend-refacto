@@ -9,6 +9,7 @@ use App\Entity\Quote\QuoteInterface;
 use App\Entity\Site\SiteInterface;
 use App\Entity\Template\Template;
 use App\Entity\Site\Site;
+use App\Entity\User\User;
 use App\Repository\Destination\StaticDestinationRepository;
 use App\Repository\Quote\StaticQuoteRepository;
 use App\Entity\Destination\Destination;
@@ -42,7 +43,7 @@ class TemplateManagerTest extends TestCase
         $computed = $templateManager->getTemplateComputed($template, ['quote' => $this->baseTestContext->getQuoteRepository()->getById(3)]);
         $expectedCountryName = ($this->baseTestContext->getDestinationRepository()->getById(2))->getCountryName();
 
-        $this->assertEquals($computed->getContent(), $expectedCountryName, $computed->content);
+        $this->assertEquals($computed->getContent(), $expectedCountryName, $computed->getContent());
     }
 
     public function testSubjectAlsoHasReplacementsApplied(): void {
@@ -51,7 +52,7 @@ class TemplateManagerTest extends TestCase
         $computed = $templateManager->getTemplateComputed($template, ['quote' => $this->baseTestContext->getQuoteRepository()->getById(3)]);
         $expectedCountryName = ($this->baseTestContext->getDestinationRepository()->getById(2))->getCountryName();
 
-        $this->assertEquals($computed->getSubject(), $expectedCountryName, $computed->content);
+        $this->assertEquals($computed->getSubject(), $expectedCountryName, $computed->getContent());
     }
 
     public function testOriginalObjectIsNotAlteredDuringReplacement(): void {
@@ -60,7 +61,7 @@ class TemplateManagerTest extends TestCase
         $initialTemplate = new Template(1, $initialTitle, 'some content');
         $computed = $templateManager->getTemplateComputed($initialTemplate, []);
 
-        $this->assertEquals($initialTemplate->getSubject(), $initialTitle, $computed->content);
+        $this->assertEquals($initialTemplate->getSubject(), $initialTitle, $computed->getContent());
     }
 
     public function testNotTaggedTextIsNotModified(): void {
@@ -69,7 +70,23 @@ class TemplateManagerTest extends TestCase
         $template = $this->getTestTemplateWithGivenMessage($notReplacedText);
         $computed = $templateManager->getTemplateComputed($template, []);
 
-        $this->assertEquals($computed->getContent(), $notReplacedText, $computed->content);
+        $this->assertEquals($computed->getContent(), $notReplacedText, $computed->getContent());
+    }
+
+    public function testUserFirstNameIsReplacedByCurrentUserFirstNameIfParamsAreEmpty(): void {
+        $templateManager = new TemplateManager($this->baseTestContext);
+        $template = $this->getTestTemplateWithGivenMessage('[user:first_name]');
+        $computed = $templateManager->getTemplateComputed($template, []);
+
+        $this->assertEquals($computed->getContent(), 'Jean', $computed->getContent());
+    }
+
+    public function testUserFirstNameIsReplacedByParamsUserFirstNameIfUserParamIsFilled(): void {
+        $templateManager = new TemplateManager($this->baseTestContext);
+        $template = $this->getTestTemplateWithGivenMessage('[user:first_name]');
+        $computed = $templateManager->getTemplateComputed($template, ['user' => new App\Entity\User\User(7, 'Marc', 'Boulanger', 'marc.boulanger@calmedica.com')]);
+
+        $this->assertEquals($computed->getContent(), 'Marc', $computed->getContent());
     }
 
 
@@ -79,6 +96,8 @@ class TemplateManagerTest extends TestCase
 
     private function buildBaseTestContext(): ApplicationContextInterface {
         return new ApplicationContext(
+            new Site(4, 'https://www.calmedica.com'),
+            new User(5, 'Jean', 'Dupond', 'jean.dupond@calmedica.com'),
             new StaticDestinationRepository($this->getFranceDestination()),
             new StaticSiteRepository($this->getGoogleSite()),
             new StaticQuoteRepository($this->getQuoteForGoogleSiteWithFranceAsDestination())

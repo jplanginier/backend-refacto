@@ -30,7 +30,7 @@ class ComputeTemplateVariables implements ComputeTemplateVariablesInterface
     }
 
     public function getQuote(): ?QuoteInterface {
-        return (isset($this->data['quote']) and $this->data['quote'] instanceof Quote) ? $this->data['quote'] : null;
+        return (isset($this->data['quote']) and $this->data['quote'] instanceof QuoteInterface) ? $this->data['quote'] : null;
     }
 
     public function getDestination(): ?DestinationInterface {
@@ -44,7 +44,7 @@ class ComputeTemplateVariables implements ComputeTemplateVariablesInterface
     }
 
     public function getUser(): UserInterface {
-        return (isset($this->data['user']) and ($this->data['user'] instanceof User)) ? $this->data['user'] : $this->context->getCurrentUser();
+        return (isset($this->data['user']) and ($this->data['user'] instanceof UserInterface)) ? $this->data['user'] : $this->context->getCurrentUser();
     }
 
     public function getSite(): ?SiteInterface {

@@ -2,9 +2,7 @@
 
 namespace App\Context;
 
-use App\Entity\Site\Site;
 use App\Entity\Site\SiteInterface;
-use App\Entity\User\User;
 use App\Entity\User\UserInterface;
 use App\Repository\Destination\DestinationRepositoryInterface;
 use App\Repository\Quote\QuoteRepositoryInterface;
@@ -13,11 +11,11 @@ use App\Repository\Site\SiteRepositoryInterface;
 class ApplicationContext implements ApplicationContextInterface
 {
     /**
-     * @var Site
+     * @var SiteInterface
      */
     private $currentSite;
     /**
-     * @var User
+     * @var UserInterface
      */
     private $currentUser;
     /**
@@ -34,13 +32,14 @@ class ApplicationContext implements ApplicationContextInterface
     private $quoteRepository;
 
     public function __construct(
+        SiteInterface $currentSite,
+        UserInterface $currentUser,
         DestinationRepositoryInterface $destinationRepository,
         SiteRepositoryInterface $siteRepository,
         QuoteRepositoryInterface $quoteRepository
     ) {
-        $faker = \Faker\Factory::create();
-        $this->currentSite = new Site($faker->randomNumber(), $faker->url);
-        $this->currentUser = new User($faker->randomNumber(), $faker->firstName, $faker->lastName, $faker->email);
+        $this->currentSite = $currentSite;
+        $this->currentUser = $currentUser;
         $this->destinationRepository = $destinationRepository;
         $this->siteRepository = $siteRepository;
         $this->quoteRepository = $quoteRepository;
