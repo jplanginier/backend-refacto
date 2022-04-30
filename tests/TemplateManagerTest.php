@@ -9,7 +9,6 @@ use App\Entity\Quote\QuoteInterface;
 use App\Entity\Site\SiteInterface;
 use App\Entity\Template\Template;
 use App\Entity\Site\Site;
-use App\Repository\Destination\FakedDestinationRepository;
 use App\Repository\Destination\StaticDestinationRepository;
 use App\Repository\Quote\StaticQuoteRepository;
 use App\Entity\Destination\Destination;
@@ -37,51 +36,6 @@ class TemplateManagerTest extends TestCase
     public function tearDown(): void {
     }
 
-//    /**
-//     * @test
-//     */
-//    public function test() {
-//        $quote = $this->getQuoteForGoogleSiteWithFranceAsDestination();
-//        $data = ['quote' => $quote];
-//        $destinationId = $this->faker->randomNumber();
-//        $expectedDestination = (new FakedDestinationRepository())->getById($destinationId);
-//        $expectedUser = $this->fakedContext->getCurrentUser();
-//
-//        $quote = new Quote($this->faker->randomNumber(), $this->faker->randomNumber(), $destinationId, DateTime::createFromFormat('Y-m-d', $this->faker->date()));
-//
-//        $template = new Template(
-//            1,
-//            'Votre livraison à [quote:destination_name]',
-//            "
-//Bonjour [user:first_name],
-//
-//Merci de nous avoir contacté pour votre livraison à [quote:destination_name].
-//
-//Bien cordialement,
-//
-//L'équipe Calmedica.com
-//");
-//        $templateManager = new TemplateManager($this->fakedContext);
-//
-//        $message = $templateManager->getTemplateComputed(
-//            $template,
-//            [
-//                'quote' => $quote
-//            ]
-//        );
-//
-//        $this->assertEquals('Votre livraison à ' . $expectedDestination->countryName, $message->subject);
-//        $this->assertEquals("
-//Bonjour " . $expectedUser->firstname . ",
-//
-//Merci de nous avoir contacté pour votre livraison à " . $expectedDestination->countryName . ".
-//
-//Bien cordialement,
-//
-//L'équipe Calmedica.com
-//", $message->content);
-//    }
-
     public function testQuoteDestinationNameIsReplacedInMessage(): void {
         $templateManager = new TemplateManager($this->baseTestContext);
         $template = $this->getTestTemplateWithGivenMessage('[quote:destination_name]');
@@ -93,11 +47,29 @@ class TemplateManagerTest extends TestCase
 
     public function testSubjectAlsoHasReplacementsApplied(): void {
         $templateManager = new TemplateManager($this->baseTestContext);
-        $template = new App\Entity\Template\Template(1, '[quote:destination_name]', '');
+        $template = new App\Entity\Template\Template(1, '[quote:destination_name]', 'some content');
         $computed = $templateManager->getTemplateComputed($template, ['quote' => $this->baseTestContext->getQuoteRepository()->getById(3)]);
         $expectedCountryName = ($this->baseTestContext->getDestinationRepository()->getById(2))->getCountryName();
 
         $this->assertEquals($computed->getSubject(), $expectedCountryName, $computed->content);
+    }
+
+    public function testOriginalObjectIsNotAlteredDuringReplacement(): void {
+        $initialTitle = '[quote:destination_name]';
+        $templateManager = new TemplateManager($this->baseTestContext);
+        $initialTemplate = new Template(1, $initialTitle, 'some content');
+        $computed = $templateManager->getTemplateComputed($initialTemplate, []);
+
+        $this->assertEquals($initialTemplate->getSubject(), $initialTitle, $computed->content);
+    }
+
+    public function testNotTaggedTextIsNotModified(): void {
+        $notReplacedText = "My little text";
+        $templateManager = new TemplateManager($this->baseTestContext);
+        $template = $this->getTestTemplateWithGivenMessage($notReplacedText);
+        $computed = $templateManager->getTemplateComputed($template, []);
+
+        $this->assertEquals($computed->getContent(), $notReplacedText, $computed->content);
     }
 
 

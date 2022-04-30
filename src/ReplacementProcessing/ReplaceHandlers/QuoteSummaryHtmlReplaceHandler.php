@@ -6,7 +6,7 @@ use App\ValueObject\ComputeTemplateVariablesInterface;
 
 class QuoteSummaryHtmlReplaceHandler implements ReplaceHandlerInterface
 {
-    public function replace(string $text, ComputeTemplateVariablesInterface $variables) {
+    public function replace(string $text, ComputeTemplateVariablesInterface $variables): string {
         $quote = $variables->getQuote();
         if (!$quote) {
             return $text;

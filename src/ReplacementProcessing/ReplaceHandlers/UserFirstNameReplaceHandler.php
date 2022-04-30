@@ -7,7 +7,7 @@ use App\ValueObject\ComputeTemplateVariablesInterface;
 class UserFirstNameReplaceHandler implements ReplaceHandlerInterface
 {
 
-    public function replace(string $text, ComputeTemplateVariablesInterface $variables) {
+    public function replace(string $text, ComputeTemplateVariablesInterface $variables): string {
         $user = $variables->getUser();
 
         return str_replace(

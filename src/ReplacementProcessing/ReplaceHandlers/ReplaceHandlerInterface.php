@@ -6,5 +6,5 @@ use App\ValueObject\ComputeTemplateVariablesInterface;
 
 interface ReplaceHandlerInterface
 {
-    public function replace(string $text, ComputeTemplateVariablesInterface $variables);
+    public function replace(string $text, ComputeTemplateVariablesInterface $variables): string;
 }
